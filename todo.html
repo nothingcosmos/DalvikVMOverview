@@ -54,7 +54,7 @@
 <h1>ToDO<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="tracing-jit-method-jit">
 <h2>tracing jitはじめて。 method jit以外の制御を追いたい。<a class="headerlink" href="#tracing-jit-method-jit" title="Permalink to this headline">¶</a></h2>
-<p>tracing jitといえば、spider monkeyがメジャーか。</p>
+<p>tracing jitといえば、spider monkeyがメジャーかな。</p>
 <p>dalvik vmのjitはtracing jitがメインみたい。</p>
 </div>
 <div class="section" id="jitarmasmpretty-print">
@@ -64,30 +64,32 @@
 </div>
 <div class="section" id="arm">
 <h2>ARMアセンブラ勉強しよう<a class="headerlink" href="#arm" title="Permalink to this headline">¶</a></h2>
-<p>JITコンパイルした出力をみてみるか。</p>
+<p>JITコンパイルした出力をみてみる。</p>
 </div>
 <div class="section" id="android">
 <h2>androidのビルドしてエミュレータを弄ってみよう。<a class="headerlink" href="#android" title="Permalink to this headline">¶</a></h2>
-<p>x86だとビルド出来なかったけど、VMwareいれてx64環境でビルドOK</p>
+<p>x86だとビルド出来なかったけど、VMwareいれてx64環境でビルド</p>
 <p>corei7 mem3.xG メモリがそろそろ限界... Haswellでたらx64にしてメモリ沢山つもう。。</p>
 <p>trunkのチェックアウトの度にビルドに必要なメモリが増えているような、、</p>
 </div>
 <div class="section" id="mirlir-pretty-print">
 <h2>中間表現のMIRとLIRのデザイン 適当にpretty printするか。<a class="headerlink" href="#mirlir-pretty-print" title="Permalink to this headline">¶</a></h2>
-<p>基本的には、既存のdexの情報を解析して、dexの上位のMIRを作っているぽい。</p>
-<p>また、dexから機種依存のLIRを生成しており、そのLIRはほぼアセンブラと等価なはずである。</p>
-<p>LIRは、アーキテクチャごとに定義されており、ARMLIRwよく参照している。</p>
+<p>基本的には、既存のdexの情報を解析して、dexより上位のMIRを作っているぽい。</p>
+<p>また、dexから機種依存のLIRを生成しており、そのLIRはほぼアセンブラと等価なはず。</p>
+<p>LIRは、アーキテクチャごとに定義されており、ARMLIRの動作を追った。</p>
 </div>
 <div class="section" id="androidjitarm">
 <h2>自分のandroidスマホにJITコンパイルしたARMアセンブラをログ出力させたい。<a class="headerlink" href="#androidjitarm" title="Permalink to this headline">¶</a></h2>
-<p>だれか教えて</p>
 <p>dalvikvmの起動オプションなんぞは、runなんちゃらに記述されており、</p>
-<p>一般的にカスタムロムを生成するくらいの場所に焼かれているため、気軽には変更できないとのこと。。。</p>
+<p>一般的にカスタムロムを生成する必要があるらしい。</p>
+<p>気軽には変更できないとのこと。。。</p>
 </div>
 <div class="section" id="sdcard-cfg">
 <h2>/sdcard/cfg/にログを出力する方法<a class="headerlink" href="#sdcard-cfg" title="Permalink to this headline">¶</a></h2>
 <p>まずはマウントする必要がある？</p>
-<p>sdcardのイメージを生成したのち、マウントするらしいい。</p>
+<p>sdcardのイメージを生成したのち、マウントするらしい。</p>
+<p>/sdcardにdotを出力するようにpretty printが設定されている。</p>
+<p>他の場所に吐いて問題ないのでしょうかね。。</p>
 </div>
 </div>
 
@@ -105,9 +107,26 @@
 
       </div>
 
+
     <div class="footer">
         &copy; Copyright 2012, nothingcosmos.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
     </div>
+
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15223787-4']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+
+</script>
+
+
   </body>
 </html>

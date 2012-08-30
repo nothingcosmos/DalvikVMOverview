@@ -52,8 +52,15 @@
         
   <div class="section" id="jitcompiler">
 <h1>jitcompiler<a class="headerlink" href="#jitcompiler" title="Permalink to this headline">¶</a></h1>
+<p>DalvikVMは、最初dexをインタプリタ実行するのですが、その後JITコンパイルします。</p>
+<p>その際、dexはmethod単位ではなく、よく実行されるdexをひとまとまりにして、Tracing JITします。</p>
+<p>DalvikVMは、JITCompilerを別スレッドで起動しっぱなしにしておき、</p>
+<p>JITCompilerに、よく実行されるdex群を入力として、JITコンパイルを依頼します。</p>
+<p>依頼する際のインターフェースは、JITCompilerのもつqueueに突っ込んでいくだけ。</p>
 <div class="section" id="jit">
 <h2>JITコンパイルの処理順<a class="headerlink" href="#jit" title="Permalink to this headline">¶</a></h2>
+<p>JITCompilerは、queueに入っているworkを、１つずつコンパイルしていきます。</p>
+<p>queueから取り出し-&gt;コンパイル-&gt;install-&gt;取り出し-&gt;コンパイル-&gt;install ...</p>
 <p>Workerの制御:</p>
 <div class="highlight-python"><pre>dvmCompilerWorkEnqueue()
 
@@ -65,37 +72,42 @@ dvmUnlockMutex(&amp;gDvmJit.compilerLock)</pre>
 <div class="highlight-python"><pre>compilerThreadStart()
 
 work = workDequeue()
-dvmCompilerDoWork(&amp;work) &lt;--  機種依存の中に定義あり
-  dvmCompileTrace()
-dvmLockMutex()
+dvmCompilerDoWork(&amp;work) &lt;-- 機種依存の中に定義あり
+  dvmCompileTrace()      &lt;-- インタプリタ実行と並行してコンパイル
+dvmLockMutex()           &lt;-- installのときだけ、Mutex
   dvmJitSetCodeAddr(work ...)
-dvmUnlockMutex()
-
-dvmCompileTrace
-  こちらがメインのJIT
-
-dvmCompileMethod
-  MethodCompileが許可されている場合に限り、
-  invokeVirtualのinline展開の際に限り、こちらが呼ばれる。</pre>
+dvmUnlockMutex()</pre>
 </div>
+<p>メインのJITCompile処理 dvmCompileTrace</p>
+<p>実装としてdvmCompileMethodも存在するが、初期状態では使用されない。</p>
+<p>MethodCompileが許可されている場合に限り、</p>
+<p>invokeVirtualのpredicated inlining、こちらが呼ばれる。</p>
 </div>
 <div class="section" id="frontend-dvmcompiletrace">
 <h2>Frontend::dvmCompileTrace<a class="headerlink" href="#frontend-dvmcompiletrace" title="Permalink to this headline">¶</a></h2>
+<p>特徴として、MIRレベルでは解析および変換フラグのみ付加していく。</p>
+<p>MIRの動的な変換は行わず、LIRへの変換、およびLIR上でフラグを参照して最適化するはず</p>
+<p>ログを参照すると、dexは3～10くらいの単位でコンパイルが依頼されてくるため、</p>
+<p>あまり最適化の余地はない。</p>
+<p>自前で作成したループや関数呼び出しを食べされれば、詳細が見えてくるかもしれない。。</p>
 <p>処理の流れ:</p>
 <div class="highlight-python"><pre>dvmCompilerAnalyzeMethodBody()
 for () {
-  dvmCompilerNewBB()
+  dvmCompilerNewBB()        &lt;-- dexをたどってBasicBlockを生成して歩く
 }
 for (bb:bblist) {
   findBlockBoundary()
-  if (isLoop) compileLoop()
+  if (isLoop) compileLoop() &lt;-- ループの検知
 }
-dvmInitializeSSAConversion()
+dvmInitializeSSAConversion()   &lt;-- SSA形式のMIRを生成する
 dvmCompilerNonLoopAnalysis()
-dvmCompilerMIR2LIR()
-dvmCompilerAssembleLIR()
+dvmCompilerMIR2LIR()           &lt;-- 機種依存のLIRへ変換 および最適化
+dvmCompilerAssembleLIR()       &lt;-- アセンブル
 dvmJitInstallClassObjectPointers()</pre>
 </div>
+</div>
+<div class="section" id="id1">
+<h2>以降は手抜きです。。<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="frontend-compileloop">
 <h2>Frontend::compileLoop<a class="headerlink" href="#frontend-compileloop" title="Permalink to this headline">¶</a></h2>
@@ -291,9 +303,26 @@ gDvmJit.profileMode = kTraceProfilingContinuous;
 
       </div>
 
+
     <div class="footer">
         &copy; Copyright 2012, nothingcosmos.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
     </div>
+
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15223787-4']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+
+</script>
+
+
   </body>
 </html>

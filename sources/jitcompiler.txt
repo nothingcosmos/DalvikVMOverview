@@ -1,8 +1,22 @@
 jitcompiler
 ###############################################################################
 
+DalvikVMは、最初dexをインタプリタ実行するのですが、その後JITコンパイルします。
+
+その際、dexはmethod単位ではなく、よく実行されるdexをひとまとまりにして、Tracing JITします。
+
+DalvikVMは、JITCompilerを別スレッドで起動しっぱなしにしておき、
+
+JITCompilerに、よく実行されるdex群を入力として、JITコンパイルを依頼します。
+
+依頼する際のインターフェースは、JITCompilerのもつqueueに突っ込んでいくだけ。
+
 JITコンパイルの処理順
 ===============================================================================
+
+JITCompilerは、queueに入っているworkを、１つずつコンパイルしていきます。
+
+queueから取り出し->コンパイル->install->取り出し->コンパイル->install ...
 
 Workerの制御::
 
@@ -17,37 +31,52 @@ Compilerの制御 ::
   compilerThreadStart()
 
   work = workDequeue()
-  dvmCompilerDoWork(&work) <--  機種依存の中に定義あり
-    dvmCompileTrace()
-  dvmLockMutex()
+  dvmCompilerDoWork(&work) <-- 機種依存の中に定義あり
+    dvmCompileTrace()      <-- インタプリタ実行と並行してコンパイル
+  dvmLockMutex()           <-- installのときだけ、Mutex
     dvmJitSetCodeAddr(work ...)
   dvmUnlockMutex()
 
-  dvmCompileTrace
-    こちらがメインのJIT
 
-  dvmCompileMethod
-    MethodCompileが許可されている場合に限り、
-    invokeVirtualのinline展開の際に限り、こちらが呼ばれる。
+メインのJITCompile処理 dvmCompileTrace
+
+実装としてdvmCompileMethodも存在するが、初期状態では使用されない。
+
+MethodCompileが許可されている場合に限り、
+
+invokeVirtualのpredicated inlining、こちらが呼ばれる。
 
 Frontend::dvmCompileTrace
 ===============================================================================
+
+特徴として、MIRレベルでは解析および変換フラグのみ付加していく。
+
+MIRの動的な変換は行わず、LIRへの変換、およびLIR上でフラグを参照して最適化するはず
+
+ログを参照すると、dexは3～10くらいの単位でコンパイルが依頼されてくるため、
+
+あまり最適化の余地はない。
+
+自前で作成したループや関数呼び出しを食べされれば、詳細が見えてくるかもしれない。。
 
 処理の流れ::
 
   dvmCompilerAnalyzeMethodBody()
   for () {
-    dvmCompilerNewBB()
+    dvmCompilerNewBB()        <-- dexをたどってBasicBlockを生成して歩く
   }
   for (bb:bblist) {
     findBlockBoundary()
-    if (isLoop) compileLoop()
+    if (isLoop) compileLoop() <-- ループの検知
   }
-  dvmInitializeSSAConversion()
+  dvmInitializeSSAConversion()   <-- SSA形式のMIRを生成する
   dvmCompilerNonLoopAnalysis()
-  dvmCompilerMIR2LIR()
-  dvmCompilerAssembleLIR()
+  dvmCompilerMIR2LIR()           <-- 機種依存のLIRへ変換 および最適化
+  dvmCompilerAssembleLIR()       <-- アセンブル
   dvmJitInstallClassObjectPointers()
+
+以降は手抜きです。。
+===============================================================================
 
 Frontend::compileLoop
 ===============================================================================
@@ -127,7 +156,6 @@ OP_INVOKE_VIRTUAL
 OP_INVOKE_INTERFACE
 
   RANGE
-
 
 
 

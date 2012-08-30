@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>log &mdash; DalvikVM 1.0 documentation</title>
+    <title>Android trunk Emulatorで起動したログをそのまま出力 &mdash; DalvikVM 1.0 documentation</title>
     
     <link rel="stylesheet" href="static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -33,7 +33,7 @@
   <body>
       <div class="header"><h1 class="heading"><a href="index.html">
           <span>DalvikVM 1.0 documentation</span></a></h1>
-        <h2 class="heading"><span>log</span></h2>
+        <h2 class="heading"><span>Android trunk Emulatorで起動したログをそのまま出力</span></h2>
       </div>
       <div class="topnav">
       
@@ -47,13 +47,10 @@
       <div class="content">
         
         
-  <div class="section" id="log">
-<h1>log<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h1>
-<p>dalvik -Xjitverbose</p>
-<p>adb logcat</p>
-</div>
-<div class="section" id="android-trunk-emulator">
+  <div class="section" id="android-trunk-emulator">
 <h1>Android trunk Emulatorで起動したログをそのまま出力<a class="headerlink" href="#android-trunk-emulator" title="Permalink to this headline">¶</a></h1>
+<p>dalvik -Xjitverbose
+adb logcat</p>
 <p>log sample</p>
 <div class="highlight-python"><pre>D/dalvikvm(  149): JIT started for system_server
 D/dalvikvm(  149): --------
@@ -1061,9 +1058,26 @@ D/dalvikvm(  149): -------- end of chaining cells (0x0058)</pre>
 
       </div>
 
+
     <div class="footer">
         &copy; Copyright 2012, nothingcosmos.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
     </div>
+
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15223787-4']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+
+</script>
+
+
   </body>
 </html>

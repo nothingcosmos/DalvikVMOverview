@@ -52,6 +52,8 @@
         
   <div class="section" id="src">
 <h1>src<a class="headerlink" href="#src" title="Permalink to this headline">¶</a></h1>
+<p>JITコンパイラ関連のソースコードの構成をざっと眺めてみた感想。</p>
+<p>JITコンパイラ以外のVMの中身も見ていきたいね。</p>
 <p>ソースコードの構成</p>
 <p>vm/compiler</p>
 <div class="highlight-python"><pre>Compiler.cpp           JITコンパイラの主制御 別threadがTaskをQueue管理
@@ -120,9 +122,26 @@ armv7-a-neon
 
       </div>
 
+
     <div class="footer">
         &copy; Copyright 2012, nothingcosmos.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
     </div>
+
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15223787-4']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+
+</script>
+
+
   </body>
 </html>
