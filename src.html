@@ -1,0 +1,128 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>src &mdash; DalvikVM 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="DalvikVM 1.0 documentation" href="index.html" />
+    <link rel="next" title="jitcompiler" href="jitcompiler.html" />
+    <link rel="prev" title="ToDO" href="todo.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>DalvikVM 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>src</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="todo.html">ToDO</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="jitcompiler.html">jitcompiler</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="src">
+<h1>src<a class="headerlink" href="#src" title="Permalink to this headline">¶</a></h1>
+<p>ソースコードの構成</p>
+<p>vm/compiler</p>
+<div class="highlight-python"><pre>Compiler.cpp           JITコンパイラの主制御 別threadがTaskをQueue管理
+Compiler.h             VMへ公開するシンボルを宣言
+CompilerIR.h           中間表現の定義(CompileUnit, MIR, LIR)
+CompilerInternals.h    includeの制御
+CompilerUtility.h      DumpやGlowable系の定義
+Dataflow.cpp           DisAsm, SSA, Liveness, IndVar
+Dataflow.h             Dataflow解析結果を格納するIRの定義
+Frontend.cpp           コンパイル処理の主制御(TracingJIT)
+                       dvmCompileTrace/dvmCompileLoop/dvmCompileMethod
+InlineTransformation.cpp inline展開の制御 PredicatedInlineによるPolyも対象
+IntermediateRep.cpp    IR用のUtility
+Loop.cpp               Loop用の解析処理と最適化
+Loop.h                 Loop用の構造体定義
+Ralloc.cpp             SSAベースの単純な型推論とLocalRegAlloc 1pass
+SSATransformation.cpp  SSAのUtility Dom DomFの解析 SSAへの変換 Loop検知
+Utility.cpp            compilerのメモリ管理とDebug用処理
+template               各種アセンブラのテンプレート
+codegen                archごとのLIRおよびコード生成
+    CodegenFactory.cpp Load/StoreのFactoryの実装
+    CompilerCodegen.h  Codegenの各種メソッドの宣言のみ
+    Optimizer.h        LIRのOptimizerの宣言のみ
+    Ralloc.h           RegAllocのメソッドの宣言のみ
+    RallocUtil.cpp     RegAllocのUtility RegisterInfoとRegLocationの操作
+    arm
+    mips
+    x86</pre>
+</div>
+<p>vm/compiler/codegen/arm</p>
+<div class="highlight-python"><pre>ArchFactory.cpp        TargetLIRのサポート
+ArchUtility.cpp        dumpやdecode用処理
+ArmLIR.h               ARM用のLIRの定義
+ArmRallocUtil.cpp      RallocUtilへのラッパー
+Assemble.cpp           簡易Assemble, LIR2Asm, TC2IC, 難しいです。。
+CalloutHelper.h        DalvikへのCallout定義
+Codegen.h              Codegenの関数宣言
+CodegenCommon.cpp      共通処理定義。newLIRs with 0-4
+CodegenDriver.cpp      Codegenの主制御。4kえ。 dvmCompilerDoWork()
+                       genXXとhandleFmtXXが多数定義
+FP
+GlobalOptimizations.cpp applyRedundantBranchElimination()
+LocalOptimizations.cpp applyLoadStoreElimination() applyLoadHosting()
+README.txt
+Thumb
+Thumb2
+armv5te
+armv5te-vfp
+armv7-a
+armv7-a-neon
+  MethodCodegenDriver.cpp methodBlockCodeGenを定義</pre>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="todo.html">ToDO</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="jitcompiler.html">jitcompiler</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, nothingcosmos.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>

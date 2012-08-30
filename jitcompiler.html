@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jitcompiler &mdash; DalvikVM 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="DalvikVM 1.0 documentation" href="index.html" />
+    <link rel="next" title="jitverbose" href="jitverbose.html" />
+    <link rel="prev" title="src" href="src.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>DalvikVM 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>jitcompiler</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="src.html">src</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="jitverbose.html">jitverbose</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="jitcompiler">
+<h1>jitcompiler<a class="headerlink" href="#jitcompiler" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jit">
+<h2>JITコンパイルの処理順<a class="headerlink" href="#jit" title="Permalink to this headline">¶</a></h2>
+<p>Workerの制御:</p>
+<div class="highlight-python"><pre>dvmCompilerWorkEnqueue()
+
+dvmLockMutex(&amp;gDvmJit.compilerLock)
+CompilerWorkOrder() * newOrder &lt;-- workDequeue()で取得
+dvmUnlockMutex(&amp;gDvmJit.compilerLock)</pre>
+</div>
+<p>Compilerの制御</p>
+<div class="highlight-python"><pre>compilerThreadStart()
+
+work = workDequeue()
+dvmCompilerDoWork(&amp;work) &lt;--  機種依存の中に定義あり
+  dvmCompileTrace()
+dvmLockMutex()
+  dvmJitSetCodeAddr(work ...)
+dvmUnlockMutex()
+
+dvmCompileTrace
+  こちらがメインのJIT
+
+dvmCompileMethod
+  MethodCompileが許可されている場合に限り、
+  invokeVirtualのinline展開の際に限り、こちらが呼ばれる。</pre>
+</div>
+</div>
+<div class="section" id="frontend-dvmcompiletrace">
+<h2>Frontend::dvmCompileTrace<a class="headerlink" href="#frontend-dvmcompiletrace" title="Permalink to this headline">¶</a></h2>
+<p>処理の流れ:</p>
+<div class="highlight-python"><pre>dvmCompilerAnalyzeMethodBody()
+for () {
+  dvmCompilerNewBB()
+}
+for (bb:bblist) {
+  findBlockBoundary()
+  if (isLoop) compileLoop()
+}
+dvmInitializeSSAConversion()
+dvmCompilerNonLoopAnalysis()
+dvmCompilerMIR2LIR()
+dvmCompilerAssembleLIR()
+dvmJitInstallClassObjectPointers()</pre>
+</div>
+</div>
+<div class="section" id="frontend-compileloop">
+<h2>Frontend::compileLoop<a class="headerlink" href="#frontend-compileloop" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="frontend-compiletrace">
+<h2>Frontend::compileTrace<a class="headerlink" href="#frontend-compiletrace" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="frontend-compilemethod">
+<h2>Frontend::compileMethod<a class="headerlink" href="#frontend-compilemethod" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="codegen">
+<h2>codegen<a class="headerlink" href="#codegen" title="Permalink to this headline">¶</a></h2>
+<p>LocalOptimizer</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">LoadStoreElimination</span>
+<span class="n">LoadHoisting</span>
+</pre></div>
+</div>
+<p>GlobalOptimizer</p>
+<div class="highlight-python"><pre>arm
+  RedundantBranchElimination
+
+mips
+  RedundantBranchElimination
+  CopyPropagation
+  MergeMovs
+  introduceBranchDelaySlot</pre>
+</div>
+<p>LoadStoreElimination</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">arm</span><span class="o">/</span><span class="n">mips</span>
+</pre></div>
+</div>
+<p>LoadHoisting</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">arm</span><span class="o">/</span><span class="n">mips</span>
+</pre></div>
+</div>
+<p>TrackLiveTemps</p>
+<div class="highlight-python"><pre>arm/arm neon/mips</pre>
+</div>
+<p>SuppressLoads</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">arm</span><span class="o">/</span><span class="n">mips</span>
+</pre></div>
+</div>
+<p>MethodInlining</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">all</span>
+</pre></div>
+</div>
+<p>MethodJit</p>
+<div class="highlight-python"><pre>arm/mips
+
+../InlineTransformation</pre>
+</div>
+</div>
+<div class="section" id="dvmcompilerinlinemir">
+<h2>dvmCompilerInlineMIR<a class="headerlink" href="#dvmcompilerinlinemir" title="Permalink to this headline">¶</a></h2>
+<p>OP_INVOKE_SUPER</p>
+<blockquote>
+<div><p>DIRECT</p>
+<p>STATIC</p>
+<p>SUPER_QUICK</p>
+<blockquote>
+<div>RANGE</div></blockquote>
+</div></blockquote>
+<p>isRange = true</p>
+<p>OP_INVOKE_VIRTUAL</p>
+<blockquote>
+<div>QUICK</div></blockquote>
+<p>OP_INVOKE_INTERFACE</p>
+<blockquote>
+<div>RANGE</div></blockquote>
+</div>
+<div class="section" id="tryinlinesingletoncallsite">
+<h2>tryInlineSingletonCallsite<a class="headerlink" href="#tryinlinesingletoncallsite" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tryinlinevirtualcallsite">
+<h2>tryInlineVirtualCallsite<a class="headerlink" href="#tryinlinevirtualcallsite" title="Permalink to this headline">¶</a></h2>
+<p>isNativeMethod</p>
+<p>inlineEmptyVirtualCallee</p>
+<p>inlineGetter</p>
+<p>inlineSetter</p>
+<p>METHOD_IS_LEAF ???</p>
+<p>inlineGetter inlineSetterする際に、</p>
+<p>Virtualな場合、</p>
+<p>isPredicatedフラグがtrue</p>
+<p>invokePolyGetterInlining</p>
+<p>sigletonは、false</p>
+<p>inlinePredicateっていうopcode</p>
+<p>TAG MIR_INLINED_PRED</p>
+<p>armとmipsにターゲットがある</p>
+</div>
+<div class="section" id="compilercodegen">
+<h2>CompilerCodegen<a class="headerlink" href="#compilercodegen" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>dvmCompilerMIR2LIR()</dt>
+<dd>for (bb:bblist) {</dd>
+</dl>
+</div>
+<div class="section" id="mir">
+<h2>MIRのデザイン<a class="headerlink" href="#mir" title="Permalink to this headline">¶</a></h2>
+<p>CompilationUnit</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">non</span>
+</pre></div>
+</div>
+<p>JitEntry</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">non</span>
+</pre></div>
+</div>
+<p>BasicBlock</p>
+<div class="highlight-python"><pre>id
+Method*
+BBType
+MIR*first
+MIR*last
+
+BasicBlockDataFlow
+BitVector pred, dom, idom domfr
+
+FallThroght</pre>
+</div>
+<p>MIR</p>
+<div class="highlight-python"><pre>compilerIR.hに定義あり
+struct MIR*prev, next
+struct SSARepresentation * ssarep
+??? DecordedInstrunction dalvikInsn
+
+ssarepのみの片方向参照か</pre>
+</div>
+<p>SSARepresentation</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">non</span>
+</pre></div>
+</div>
+<p>LIR</p>
+<div class="highlight-python"><pre>LIR* prev, next, target
+int offset</pre>
+</div>
+<p>CallSiteinfo</p>
+<div class="highlight-python"><pre>codegenの下、機種依存ごとに定義</pre>
+</div>
+<p>INVOKE_INTERFACE_RANGE</p>
+</div>
+<div class="section" id="dvmcompilermir2lir">
+<h2>dvmCompilerMIR2LIR<a class="headerlink" href="#dvmcompilermir2lir" title="Permalink to this headline">¶</a></h2>
+<p>処理概要:</p>
+<div class="highlight-python"><pre>for (bb:bblist) {
+  for (mir:mirlist) {
+  }
+}
+dvmCompilerApplyLocalOptimizations()
+  applyLoadStoreElimination()
+  applyLoadHosting()
+dvmCompilerApplyGlobalOptimizations()
+  applyRedundantBranchElimination()</pre>
+</div>
+</div>
+<div class="section" id="debug">
+<h2>Debug方法<a class="headerlink" href="#debug" title="Permalink to this headline">¶</a></h2>
+<p>cUnit.printMe</p>
+<p>dvmCompilerCodegenDump</p>
+<p>// Debugging only</p>
+<p>dvmDumpCFG(&amp;cUnit, &#8220;/sdcard/cfg/&#8221;);</p>
+<p>修正箇所</p>
+<div class="highlight-python"><pre>} else if (strncmp(argv[i], "-Xjitverbose", 12) == 0) {
+gDvmJit.printMe = true;
+} else if (strncmp(argv[i], "-Xjitprofile", 12) == 0) {
+gDvmJit.profileMode = kTraceProfilingContinuous;
+} else if (strncmp(argv[i], "-Xjitdisableopt", 15) == 0) {</pre>
+</div>
+</div>
+<div class="section" id="debug-dump">
+<h2>Debug/Dump系のメソッド一覧<a class="headerlink" href="#debug-dump" title="Permalink to this headline">¶</a></h2>
+<p>/// Frontend</p>
+<p>/// dot graphを生成する。</p>
+<p>dvmDumpCFG()</p>
+<p>dvmCompilerMIR2LIR</p>
+<p>cUnit.printMe をフラグ立てる</p>
+<p>dumpRegPool</p>
+<p>dvmCompilerCodegenDump</p>
+<p>dumpDependentInsnPair</p>
+<p>上記を有効にしてデバッグも出力すれば最適化の適応具合も見れそう</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="src.html">src</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="jitverbose.html">jitverbose</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, nothingcosmos.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>

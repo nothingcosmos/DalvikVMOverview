@@ -1,0 +1,118 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to DalvikVM’s documentation! &mdash; DalvikVM 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="DalvikVM 1.0 documentation" href="#" />
+    <link rel="next" title="ToDO" href="todo.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="#">
+          <span>DalvikVM 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Welcome to DalvikVM’s documentation!</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="todo.html">ToDO</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="welcome-to-dalvikvm-s-documentation">
+<h1>Welcome to DalvikVM&#8217;s documentation!<a class="headerlink" href="#welcome-to-dalvikvm-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">ToDO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#tracing-jit-method-jit">tracing jitはじめて。 method jit以外の制御を追いたい。</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#jitarmasmpretty-print">JITのコンパイラの最終結果がどんなARMのAsmに落ちるんか、適当にpretty printするか</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#arm">ARMアセンブラ勉強しよう</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#android">androidのビルドしてエミュレータを弄ってみよう。</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#mirlir-pretty-print">中間表現のMIRとLIRのデザイン 適当にpretty printするか。</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#androidjitarm">自分のandroidスマホにJITコンパイルしたARMアセンブラをログ出力させたい。</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#sdcard-cfg">/sdcard/cfg/にログを出力する方法</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jitcompiler.html">jitcompiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#jit">JITコンパイルの処理順</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#frontend-dvmcompiletrace">Frontend::dvmCompileTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#frontend-compileloop">Frontend::compileLoop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#frontend-compiletrace">Frontend::compileTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#frontend-compilemethod">Frontend::compileMethod</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#codegen">codegen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#dvmcompilerinlinemir">dvmCompilerInlineMIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#tryinlinesingletoncallsite">tryInlineSingletonCallsite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#tryinlinevirtualcallsite">tryInlineVirtualCallsite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#compilercodegen">CompilerCodegen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#mir">MIRのデザイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#dvmcompilermir2lir">dvmCompilerMIR2LIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#debug">Debug方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jitcompiler.html#debug-dump">Debug/Dump系のメソッド一覧</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="jitverbose.html">jitverbose</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jitverbose.html#id1">サンプル出力</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logcat.html">log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logcat.html#android-trunk-emulator">Android trunk Emulatorで起動したログをそのまま出力</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="todo.html">ToDO</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, nothingcosmos.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>
