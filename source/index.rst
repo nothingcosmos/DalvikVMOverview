@@ -6,6 +6,8 @@
 Welcome to DalvikVM's documentation!
 ====================================
 
+某所勉強会に飛び入りで発表した内容です。
+
 Contents:
 
 .. toctree::
